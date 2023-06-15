@@ -57,19 +57,20 @@ model forma_pagamentos {
 }
 
 model products {
-  id          Int      @id @default(autoincrement())
-  nome        String   @db.VarChar(255)
-  codigo      String?  @db.VarChar(255)
-  unidade     String   @db.VarChar(255)
-  categoria   String   @db.VarChar(255)
-  codigoBarra String   @db.VarChar(255)
-  preco       Float
-  insumo      Int
-  venda       Int
-  composicao  Int
-  ativo       Int
-  createdAt   DateTime @db.DateTime(0)
-  updatedAt   DateTime @db.DateTime(0)
+  idProduto    Int      @id @default(autoincrement())
+  nome         String   @db.VarChar(255)
+  codigo       String?  @db.VarChar(255)
+  unidade      String   @db.VarChar(255)
+  categoria    String   @db.VarChar(255)
+  codigoBarra  String   @db.VarChar(255)
+  preco        Float
+  insumo       Int
+  venda        Int
+  composicao   Int
+  localEstoque BigInt
+  ativo        Int
+  createdAt    DateTime @db.DateTime(0)
+  updatedAt    DateTime @db.DateTime(0)
 }
 
 model taxa_entregas {
@@ -128,15 +129,49 @@ model parceiros_tipo {
 }
 
 model local_estoque {
-  id        BigInt   @id @default(autoincrement())
-  nome      String   @db.VarChar(50)
-  descricao String   @db.VarChar(250)
-  ativo     Int
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
+  idLocalEstoque BigInt   @id @default(autoincrement())
+  nome           String   @db.VarChar(50)
+  descricao      String   @db.VarChar(250)
+  ativo          Int
+  createdAt      DateTime @db.DateTime(0)
+  updatedAt      DateTime @db.DateTime(0)
 }
 
 model tipo_produto {
-  id   BigInt @id @default(autoincrement())
-  nome String @db.VarChar(250)
+  id              BigInt   @id @default(autoincrement())
+  nome            String   @db.VarChar(250)
+  idProduto       Int
+  dataCriacao     DateTime @db.DateTime(6)
+  dataAtualizacao DateTime @db.DateTime(6)
+}
+
+model produto_composicao {
+  idProdutoComposicao BigInt   @id @default(autoincrement())
+  produto             Int
+  idProduto           Int
+  quantidade          Float    @db.Float
+  dataCriacao         DateTime @db.DateTime(6)
+  dataAtualizacao     DateTime @db.DateTime(6)
+}
+
+model entrada_manual {
+  idEntradaManual BigInt   @id @default(autoincrement())
+  numNota         String   @db.VarChar(255)
+  dataEmissao     DateTime @db.Date
+  dataEntrada     DateTime @db.Date
+  idFornecedor    BigInt   @default(0)
+  status          Int
+  createdAt       DateTime @db.DateTime(0)
+  updatedAt       DateTime @db.DateTime(0)
+}
+
+model entrada_manual_item {
+  idEntradaManualItem BigInt   @id @default(autoincrement())
+  idEntradaManual     BigInt   @default(0)
+  idProduto           BigInt   @default(0)
+  qtd                 Decimal  @default(0.0000) @db.Decimal(10, 4)
+  valorUnit           Decimal  @default(0.00) @db.Decimal(10, 2)
+  ativo               Int
+  createdAt           DateTime @db.DateTime(0)
+  updatedAt           DateTime @db.DateTime(0)
 }
